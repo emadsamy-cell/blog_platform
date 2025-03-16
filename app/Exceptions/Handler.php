@@ -61,17 +61,6 @@ class Handler extends ExceptionHandler
             ], 404);
         }
 
-        if ($exception instanceof AuthenticationException) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 401);
-        }
-
-        return response()->json([
-            'error' => 'Something went wrong',
-            'message' => $exception->getMessage()
-        ], 500);
-
         return parent::render($request, $exception);
     }
 

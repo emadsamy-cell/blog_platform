@@ -19,6 +19,11 @@ class PostController extends Controller
     {
         $query = Post::with('author:id,name')->select('id', 'title', 'category', 'content', 'author_id');
 
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                ->orWhere('category', 'like', '%' . $request->search . '%');
+        }
+
         // Filter by category
         if ($request->has('category')) {
             $query->where('category', $request->category);
