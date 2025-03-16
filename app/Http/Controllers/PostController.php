@@ -80,7 +80,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::with(['author:id,name,email', 'comments'])->findOrFail($id);
+        $post = Post::with(['author:id,name,email', 'comments.user'])->findOrFail($id);
 
         return response()->json($post);
     }
