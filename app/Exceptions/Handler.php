@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +48,29 @@ class Handler extends ExceptionHandler
                 'errors' => $exception->errors()
             ], 422);
         }
+
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json([
+                'error' => 'API endpoint not found'
+            ], 404);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'error' => "Resource not found"
+            ], 404);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 401);
+        }
+
+        return response()->json([
+            'error' => 'Something went wrong',
+            'message' => $exception->getMessage()
+        ], 500);
 
         return parent::render($request, $exception);
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Public routes (do not require authentication)
+Route::get('/posts', [PostController::class, 'index']); // List all posts
+Route::get('/posts/{id}', [PostController::class, 'show']); // Show a single post
+
+Route::middleware('auth:api')->group(function () {
+    // Create a blog post
+    Route::post('/posts', [PostController::class, 'store']);
+
+    // Update a blog post
+    Route::put('/posts/{id}', [PostController::class, 'update']);
+
+    // Delete a blog post
+    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 });
